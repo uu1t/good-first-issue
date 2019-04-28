@@ -1,0 +1,8 @@
+a {
+  @apply no-underline;
+  @apply text-blue-dark;
+}
+
+a:hover {
+  @apply text-blue-darker;
+}

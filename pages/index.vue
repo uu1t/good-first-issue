@@ -3,6 +3,7 @@
     <IssueResult
       v-for="issue in issueResults"
       :key="issue.key"
+      :author="issue.author"
       :repository="issue.repository"
       :title="issue.title"
       :url="issue.url"
@@ -40,6 +41,11 @@ export default {
                   id
                   title
                   url
+                  author {
+                    avatarUrl
+                    login
+                    url
+                  }
                   repository {
                     name
                     url

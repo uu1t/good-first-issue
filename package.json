@@ -3,8 +3,10 @@
   "description": "Yet another good first issue finder",
   "version": "1.0.0",
   "dependencies": {
+    "@nuxtjs/apollo": "^4.0.0-rc4",
     "@nuxtjs/auth": "^4.5.3",
     "@nuxtjs/axios": "^5.4.1",
+    "apollo-boost": "^0.3.1",
     "cross-env": "^5.2.0",
     "nuxt": "^2.4.0",
     "vue-octicon": "^2.1.1"

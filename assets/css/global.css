@@ -1,8 +1,17 @@
 a {
   @apply no-underline;
   @apply text-blue-dark;
+  transition: color 0.2s ease;
 }
 
 a:hover {
   @apply text-blue-darker;
+}
+
+a > img {
+  transition: filter 0.2s ease;
+}
+
+a:hover > img {
+  filter: brightness(0.9);
 }

@@ -1,5 +1,5 @@
 <template>
-  <button class="border hover:bg-grey-light px-4 py-2 rounded c-button">
+  <button class="c-button border hover:bg-grey-light inline-flex items-center px-4 py-2 rounded">
     <slot></slot>
   </button>
 </template>

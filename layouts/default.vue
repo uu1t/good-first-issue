@@ -1,34 +1,53 @@
 <template>
   <div>
-    <header class="l-header">
-      <div class="container mx-auto">
-        <div>
-          <h1 class="p-title">GitHub<span class="p-title__label">good first issue</span></h1>
+    <header class="l-header flex h-16">
+      <div class="container flex items-center mx-auto">
+        <div class="p-title">
+          <h1>GitHub<span class="p-title__label font-normal ml-2 px-2 py-1">good first issue</span></h1>
         </div>
+        <button
+          v-if="loggedIn"
+          class="p-logout flex hover:bg-grey-darkest ml-auto items-center px-2 self-stretch text-white"
+          @click="logout"
+        >
+          <CIcon name="sign-out" />Sign out
+        </button>
       </div>
     </header>
     <nuxt />
   </div>
 </template>
 
+<script>
+export default {
+  computed: {
+    loggedIn() {
+      return this.$auth.loggedIn
+    }
+  },
+  methods: {
+    logout() {
+      this.$auth.logout()
+    }
+  }
+}
+</script>
+
 <style scoped>
 .l-header {
-  @apply h-16;
-  align-items: center;
   background: #24292e;
-  display: flex;
 }
 
-.p-title {
+.p-title > * {
   font-size: 1.25rem;
   color: #ffffff;
 }
 
 .p-title__label {
-  @apply ml-2;
-  @apply px-2;
-  @apply py-1;
   background: #7057ff;
-  font-weight: normal;
+}
+
+.p-logout {
+  transition: 0.2s ease;
 }
 </style>

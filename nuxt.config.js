@@ -34,7 +34,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ['@nuxtjs/auth', '@nuxtjs/axios'],
 
   /*
    ** Build configuration
@@ -54,5 +54,25 @@ export default {
         })
       }
     }
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/callback',
+      home: '/'
+    },
+    strategies: {
+      github: {
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        scope: ['read:user']
+      }
+    }
+  },
+
+  router: {
+    middleware: ['auth']
   }
 }

@@ -1,6 +1,6 @@
 <template>
-  <div class="container flex flex-col mx-auto">
-    <CButton class="p-login" @click.native="login">Sign in with GitHub</CButton>
+  <div class="container flex flex-col items-center mx-auto">
+    <CButton class="mt-12" @click.native="login"><CIcon name="mark-github" />Sign in with GitHub</CButton>
   </div>
 </template>
 
@@ -8,19 +8,8 @@
 export default {
   methods: {
     login() {
-      // eslint-disable-next-line
-      console.log('clicked')
+      this.$auth.loginWith('github')
     }
   }
 }
 </script>
-
-<style scoped>
-.container {
-  align-items: center;
-}
-
-.p-login {
-  @apply mt-12;
-}
-</style>

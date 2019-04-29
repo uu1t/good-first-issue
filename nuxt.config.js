@@ -13,7 +13,11 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: pkg.description }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      { rel: 'icon', type: 'image/png', href: '/icon-32.png', sizes: '32x32' },
+      { rel: 'icon', type: 'image/png', href: '/icon-192.png', sizes: '192x192' },
+      { rel: 'apple-touch-icon', type: 'image/png', href: '/apple-touch-icon-180.png', sizes: '180x180' }
+    ]
   },
 
   /*

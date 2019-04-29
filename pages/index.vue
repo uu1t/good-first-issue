@@ -6,6 +6,9 @@
     <transition-group>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
       <div key="p-pagination" class="flex justify-center mb-4">
+        <nuxt-link v-if="hasPreviousPage" to="/" class="border inline-flex items-center mr-4 p-2 rounded">
+          <CIcon name="chevron-doulbe-left" :margin-right="false" />
+        </nuxt-link>
         <nuxt-link
           v-if="hasPreviousPage"
           :to="{ query: previousPageQuery }"

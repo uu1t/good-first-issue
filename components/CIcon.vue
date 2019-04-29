@@ -13,6 +13,14 @@ import 'vue-octicon/icons/sign-out'
 import 'vue-octicon/icons/star'
 import 'vue-octicon/icons/sync'
 
+Octicon.register({
+  'chevron-doulbe-left': {
+    width: 12,
+    height: 16,
+    d: 'M5 3l1.5 1.5L2.75 8l3.75 3.5L5 13 0 8l5-5zm5.5 0L12 4.5 8.25 8 12 11.5 10.5 13l-5-5 5-5z'
+  }
+})
+
 export default {
   components: {
     Octicon

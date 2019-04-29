@@ -1,5 +1,5 @@
 <template>
-  <Octicon :name="name" class="w-4 h-4 mr-2" />
+  <Octicon :name="name" :spin="spin" class="w-4 h-4 mr-2" />
 </template>
 
 <script>
@@ -9,6 +9,7 @@ import 'vue-octicon/icons/mark-github'
 import 'vue-octicon/icons/repo'
 import 'vue-octicon/icons/sign-out'
 import 'vue-octicon/icons/star'
+import 'vue-octicon/icons/sync'
 
 export default {
   components: {
@@ -18,6 +19,10 @@ export default {
     name: {
       type: String,
       required: true
+    },
+    spin: {
+      type: Boolean,
+      default: false
     }
   }
 }

@@ -20,7 +20,7 @@
     <nuxt />
     <footer class="bg-grey-lighter">
       <div class="container flex mx-auto py-6">
-        <div>&copy; 2019 uu1t</div>
+        <div class="text-grey-darkest">&copy; 2019 uu1t</div>
         <div class="ml-auto">
           <a href="https://github.com/uu1t/good-first-issue" target="_blank" class="inline-flex items-center">
             <CIcon name="mark-github" />Source code

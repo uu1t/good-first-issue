@@ -1,6 +1,11 @@
 <template>
   <main class="container mx-auto">
-    <IssueResult v-for="issue in issueResults" :key="issue.key" :issue="issue"></IssueResult>
+    <div v-if="$apollo.loading" class="p-loading flex flex-col items-center my-16">
+      <CIcon name="sync" spin />
+    </div>
+    <transition-group>
+      <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
+    </transition-group>
   </main>
 </template>
 
@@ -23,7 +28,7 @@ export default {
   },
   apollo: {
     search: {
-      // See: https://stackoverflow.com/a/49082397
+      // See https://stackoverflow.com/a/49082397
       query: gql`
         query SearchIssues($query: String!) {
           search(first: 20, type: ISSUE, query: $query) {

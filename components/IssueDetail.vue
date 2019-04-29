@@ -1,10 +1,10 @@
 <template>
   <div class="px-2 py-4">
-    <div class="p-title text-lg mb-2">
+    <div class="p-title text-lg mb-3">
       <a :href="url" target="_blank">{{ title }}</a>
     </div>
-    <div class="p-body mb-2 text-grey-darker">{{ bodyText }}</div>
-    <div class="flex items-center">
+    <div v-if="bodyText" class="p-body text-grey-darker">{{ bodyText }}</div>
+    <div class="flex items-center mt-4">
       <CTag v-if="comments.totalCount > 0" class="mr-1">
         <CIcon name="comment-discussion" />
         {{ comments.totalCount }}
@@ -46,7 +46,8 @@ export default {
 <style scoped>
 /* See http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/ */
 .p-body {
-  max-height: 2.25rem;
+  line-height: 1.2;
+  max-height: 2.4rem;
   overflow: hidden;
   padding-right: 1rem;
   position: relative;

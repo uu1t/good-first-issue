@@ -5,6 +5,22 @@
     </div>
     <transition-group>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
+      <div key="p-pagination" class="flex justify-center mb-4">
+        <nuxt-link
+          v-if="hasPreviousPage"
+          :to="{ query: previousPageQuery }"
+          class="border inline-flex items-center mr-4 p-2 rounded"
+        >
+          <CIcon name="chevron-left" :margin-right="false" />
+        </nuxt-link>
+        <nuxt-link
+          v-if="hasNextPage"
+          :to="{ query: nextPageQuery }"
+          class="border inline-flex items-center p-2 rounded"
+        >
+          <CIcon name="chevron-right" :margin-right="false" />
+        </nuxt-link>
+      </div>
     </transition-group>
   </main>
 </template>
@@ -19,20 +35,46 @@ export default {
     IssueResult
   },
   data: () => ({
+    search: {
+      pageInfo: {}
+    },
     query: 'is:issue label:"good first issue"'
   }),
   computed: {
+    hasNextPage() {
+      const { hasNextPage } = this.search.pageInfo
+      return hasNextPage
+    },
+    hasPreviousPage() {
+      const { hasPreviousPage } = this.search.pageInfo
+      return hasPreviousPage || false
+    },
     issueResults() {
-      return this.search && this.search.nodes ? this.search.nodes : []
+      const { nodes = [] } = this.search
+      return nodes
+    },
+    nextPageQuery() {
+      const { endCursor: after } = this.search.pageInfo
+      return { after }
+    },
+    previousPageQuery() {
+      const { startCursor: before } = this.search.pageInfo
+      return { before }
     }
   },
   apollo: {
     search: {
       // See https://stackoverflow.com/a/49082397
       query: gql`
-        query SearchIssues($query: String!) {
-          search(first: 20, type: ISSUE, query: $query) {
+        query SearchIssues($query: String!, $after: String, $before: String, $first: Int, $last: Int) {
+          search(type: ISSUE, query: $query, after: $after, before: $before, first: $first, last: $last) {
             issueCount
+            pageInfo {
+              endCursor
+              hasNextPage
+              hasPreviousPage
+              startCursor
+            }
             nodes {
               ... on Issue {
                 bodyText
@@ -77,9 +119,18 @@ export default {
         }
       `,
       variables() {
-        return {
+        const { after, before } = this.$route.query
+        const vars = {
+          after,
+          before,
           query: this.query
         }
+        if (before) {
+          vars.last = 20
+        } else {
+          vars.first = 20
+        }
+        return vars
       }
     }
   }

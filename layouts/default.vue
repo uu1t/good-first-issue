@@ -58,6 +58,6 @@ export default {
 }
 
 .p-logout {
-  transition: background 0.2s ease;
+  transition: 0.2s ease;
 }
 </style>

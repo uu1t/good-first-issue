@@ -1,7 +1,7 @@
 a {
   @apply no-underline;
   @apply text-blue-dark;
-  transition: color 0.2s ease;
+  transition: 0.2s ease;
 }
 
 a:hover {
@@ -9,7 +9,7 @@ a:hover {
 }
 
 a > img {
-  transition: filter 0.2s ease;
+  transition: 0.2s ease;
 }
 
 a:hover > img {
@@ -18,7 +18,7 @@ a:hover > img {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.2s;
+  transition: 0.2s;
 }
 
 .v-enter,

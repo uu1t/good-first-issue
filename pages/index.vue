@@ -6,20 +6,24 @@
     <transition-group>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
       <div key="p-pagination" class="flex justify-center mb-4">
-        <nuxt-link v-if="hasPreviousPage" to="/" class="border inline-flex items-center mr-4 p-2 rounded">
+        <nuxt-link
+          v-if="hasPreviousPage"
+          to="/"
+          class="p-pagination__link border hover:bg-grey-light inline-flex items-center p-2 rounded-l"
+        >
           <CIcon name="chevron-doulbe-left" :margin-right="false" />
         </nuxt-link>
         <nuxt-link
           v-if="hasPreviousPage"
           :to="{ query: previousPageQuery }"
-          class="border inline-flex items-center mr-4 p-2 rounded"
+          class="p-pagination__link border-t border-r border-b mr-4 hover:bg-grey-light inline-flex items-center p-2 rounded-r"
         >
           <CIcon name="chevron-left" :margin-right="false" />
         </nuxt-link>
         <nuxt-link
           v-if="hasNextPage"
           :to="{ query: nextPageQuery }"
-          class="border inline-flex items-center p-2 rounded"
+          class="p-pagination__link border hover:bg-grey-light inline-flex items-center p-2 rounded"
         >
           <CIcon name="chevron-right" :margin-right="false" />
         </nuxt-link>
@@ -139,3 +143,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.p-pagination__link {
+  transition: 0.2s ease;
+}
+</style>

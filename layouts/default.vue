@@ -3,10 +3,7 @@
     <header class="l-header flex h-16">
       <div class="container flex items-center mx-auto">
         <div class="p-title">
-          <h1>
-            GitHub
-            <span class="p-title__label font-normal ml-2 px-2 py-1 rounded-sm">good first issue</span>
-          </h1>
+          <h1>GitHub<span class="p-title__label font-normal ml-2 px-2 py-1 rounded-sm">good first issue</span></h1>
         </div>
         <button
           v-if="loggedIn"

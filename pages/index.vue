@@ -1,13 +1,6 @@
 <template>
   <main class="container mx-auto">
-    <IssueResult
-      v-for="issue in issueResults"
-      :key="issue.key"
-      :author="issue.author"
-      :repository="issue.repository"
-      :title="issue.title"
-      :url="issue.url"
-    ></IssueResult>
+    <IssueResult v-for="issue in issueResults" :key="issue.key" :issue="issue"></IssueResult>
   </main>
 </template>
 
@@ -25,7 +18,7 @@ export default {
   }),
   computed: {
     issueResults() {
-      return this.search && this.search.edges ? this.search.edges.map(edge => edge.node) : []
+      return this.search && this.search.nodes ? this.search.nodes : []
     }
   },
   apollo: {
@@ -35,31 +28,42 @@ export default {
         query SearchIssues($query: String!) {
           search(first: 20, type: ISSUE, query: $query) {
             issueCount
-            edges {
-              node {
-                ... on Issue {
-                  id
-                  title
+            nodes {
+              ... on Issue {
+                bodyText
+                id
+                title
+                url
+                author {
+                  avatarUrl
+                  login
                   url
-                  author {
-                    avatarUrl
+                }
+                comments {
+                  totalCount
+                }
+                labels(first: 5) {
+                  nodes {
+                    ... on Label {
+                      color
+                      id
+                      name
+                    }
+                  }
+                }
+                repository {
+                  name
+                  url
+                  owner {
                     login
                     url
                   }
-                  repository {
+                  primaryLanguage {
+                    color
                     name
-                    url
-                    owner {
-                      login
-                      url
-                    }
-                    primaryLanguage {
-                      color
-                      name
-                    }
-                    stargazers {
-                      totalCount
-                    }
+                  }
+                  stargazers {
+                    totalCount
                   }
                 }
               }

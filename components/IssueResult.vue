@@ -1,42 +1,44 @@
 <template>
   <div class="p-issue-result border my-4 rounded">
     <RepositoryDetail
-      :name="repository.name"
-      :owner="repository.owner"
-      :primary-language="repository.primaryLanguage"
-      :stargazers="repository.stargazers"
-      :url="repository.url"
+      :name="issue.repository.name"
+      :owner="issue.repository.owner"
+      :primary-language="issue.repository.primaryLanguage"
+      :stargazers="issue.repository.stargazers"
+      :url="issue.repository.url"
       class="p-repository"
     />
-    <UserDetail :avatar-url="author.avatarUrl" :login="author.login" :url="author.url" class="p-user" />
-    <div class="p-issue">{{ title }}</div>
+    <UserDetail
+      :avatar-url="issue.author.avatarUrl"
+      :login="issue.author.login"
+      :url="issue.author.url"
+      class="p-user"
+    />
+    <IssueDetail
+      :body-text="issue.bodyText"
+      :comments="issue.comments"
+      :labels="issue.labels"
+      :title="issue.title"
+      :url="issue.url"
+      class="p-issue"
+    />
   </div>
 </template>
 
 <script>
+import IssueDetail from './IssueDetail.vue'
 import RepositoryDetail from './RepositoryDetail.vue'
 import UserDetail from './UserDetail.vue'
 
 export default {
   components: {
+    IssueDetail,
     RepositoryDetail,
     UserDetail
   },
   props: {
-    author: {
+    issue: {
       type: Object,
-      required: true
-    },
-    repository: {
-      type: Object,
-      required: true
-    },
-    url: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
       required: true
     }
   }

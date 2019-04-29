@@ -4,6 +4,7 @@
 
 <script>
 import Octicon from 'vue-octicon/components/Octicon.vue'
+import 'vue-octicon/icons/comment-discussion'
 import 'vue-octicon/icons/mark-github'
 import 'vue-octicon/icons/repo'
 import 'vue-octicon/icons/sign-out'

@@ -6,7 +6,7 @@
 
 <script>
 const invertColor = color => {
-  const rgb = parseInt(color, 16)
+  const rgb = Number.parseInt(color.slice(1), 16)
   const r = (rgb >> 16) & 0xff
   const g = (rgb >> 8) & 0xff
   const b = (rgb >> 0) & 0xff

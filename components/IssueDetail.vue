@@ -3,7 +3,7 @@
     <div class="p-title text-lg mb-2">
       <a :href="url" target="_blank">{{ title }}</a>
     </div>
-    <div class="p-body mb-2">{{ bodyText }}</div>
+    <div class="p-body mb-2 text-grey-darker">{{ bodyText }}</div>
     <div class="flex items-center">
       <CTag v-if="comments.totalCount > 0" class="mr-1">
         <CIcon name="comment-discussion" />
@@ -44,8 +44,29 @@ export default {
 </script>
 
 <style scoped>
+/* See http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/ */
 .p-body {
-  height: 2.25rem;
+  max-height: 2.25rem;
   overflow: hidden;
+  padding-right: 1rem;
+  position: relative;
+  text-align: justify;
+}
+
+.p-body:before {
+  bottom: 0;
+  content: '...';
+  position: absolute;
+  right: 0;
+}
+
+.p-body:after {
+  background: white;
+  content: '';
+  height: 1rem;
+  margin-top: 0.2em;
+  position: absolute;
+  right: 0;
+  width: 1rem;
 }
 </style>

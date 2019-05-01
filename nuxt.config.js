@@ -38,7 +38,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/apollo', '@nuxtjs/auth', '@nuxtjs/axios'],
+  modules: ['@nuxtjs/apollo', '@nuxtjs/axios', '@nuxtjs/auth'],
 
   /*
    ** Build configuration

@@ -6,7 +6,7 @@
         :avatar-url="issue.user.avatar_url"
         :login="issue.user.login"
         :url="issue.user.html_url"
-        class="p-user flex-no-shrink"
+        class="p-user flex-no-shrink overflow-hidden"
       />
       <IssueDetail
         :body="issue.body"

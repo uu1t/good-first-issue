@@ -27,6 +27,9 @@ export default {
       required: true
     }
   },
+  data: () => ({
+    observer: null
+  }),
   computed: {
     ...mapGetters(['getRepository']),
     repository() {
@@ -48,16 +51,29 @@ export default {
       return `${ORIGIN}/${this.owner}/${this.name}`
     }
   },
-  async created() {
-    try {
-      await this.fetchRepository(this.apiUrl)
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error)
-    }
+  mounted() {
+    this.observer = new IntersectionObserver(entries => {
+      const entry = entries[0]
+      if (entry.isIntersecting) {
+        this.observer.disconnect()
+        this.doFetchRepository()
+      }
+    })
+    this.observer.observe(this.$el)
+  },
+  destroyed() {
+    this.observer.disconnect()
   },
   methods: {
-    ...mapActions(['fetchRepository'])
+    ...mapActions(['fetchRepository']),
+    async doFetchRepository() {
+      try {
+        await this.fetchRepository(this.apiUrl)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 }
 </script>

@@ -6,7 +6,6 @@ export const state = () => ({
 })
 
 export const getters = {
-  repositoryIsLoading: state => key => !state.repositories[key] || state.repositories[key].isLoading,
   getRepository: state => key => state.repositories[key]
 }
 
@@ -26,7 +25,10 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchRepository({ commit }, url) {
+  async fetchRepository({ commit, state }, url) {
+    if (state.repositories[url]) {
+      return
+    }
     commit('fetchRepository', url)
     const response = await fetch(url)
     const json = await response.json()

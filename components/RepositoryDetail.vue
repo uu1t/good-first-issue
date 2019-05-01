@@ -4,15 +4,20 @@
     <a :href="ownerUrl" target="_blank">{{ owner }}</a>
     <span class="mx-1">/</span>
     <a :href="url" target="_blank" class="mr-auto">{{ name }}</a>
-    <!-- <CTag v-if="primaryLanguage" :color="primaryLanguage.color" class="mr-2">{{ primaryLanguage.name }}</CTag>
-    <CTag>
-      <CIcon name="star" />
-      {{ stargazers.totalCount }}
-    </CTag>-->
+    <CIcon v-if="!repository || repository.isLoading" name="sync" :margin-right="false" spin />
+    <template v-else>
+      <CTag v-if="repository.language" class="mr-2">{{ repository.language }}</CTag>
+      <CTag>
+        <CIcon name="star" />
+        {{ repository.stargazers_count }}
+      </CTag>
+    </template>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 const ORIGIN = 'https://github.com'
 
 export default {
@@ -23,14 +28,18 @@ export default {
     }
   },
   computed: {
-    fragments() {
+    ...mapGetters(['getRepository']),
+    repository() {
+      return this.getRepository(this.apiUrl)
+    },
+    urlFragments() {
       return this.apiUrl.split('/')
     },
     name() {
-      return this.fragments[this.fragments.length - 1]
+      return this.urlFragments[this.urlFragments.length - 1]
     },
     owner() {
-      return this.fragments[this.fragments.length - 2]
+      return this.urlFragments[this.urlFragments.length - 2]
     },
     ownerUrl() {
       return `${ORIGIN}/${this.owner}`
@@ -38,6 +47,17 @@ export default {
     url() {
       return `${ORIGIN}/${this.owner}/${this.name}`
     }
+  },
+  async created() {
+    try {
+      await this.fetchRepository(this.apiUrl)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error)
+    }
+  },
+  methods: {
+    ...mapActions(['fetchRepository'])
   }
 }
 </script>

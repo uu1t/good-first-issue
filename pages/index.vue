@@ -46,7 +46,7 @@ export default {
   computed: {
     ...mapState(['issueResults'])
   },
-  async mounted() {
+  async created() {
     try {
       await this.searchIssues()
       this.isLoading = false

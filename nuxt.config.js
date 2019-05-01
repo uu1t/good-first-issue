@@ -38,7 +38,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/apollo', '@nuxtjs/axios', '@nuxtjs/auth'],
+  modules: [],
 
   /*
    ** Build configuration
@@ -58,31 +58,5 @@ export default {
         })
       }
     }
-  },
-
-  apollo: {
-    clientConfigs: {
-      default: '~/plugins/apollo.js'
-    }
-  },
-
-  auth: {
-    redirect: {
-      login: '/login',
-      logout: '/login',
-      callback: '/callback',
-      home: '/'
-    },
-    strategies: {
-      github: {
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
-        scope: ['read:user']
-      }
-    }
-  },
-
-  router: {
-    middleware: ['auth']
   }
 }

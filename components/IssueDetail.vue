@@ -3,15 +3,13 @@
     <div class="p-title text-lg mb-3">
       <a :href="url" target="_blank">{{ title }}</a>
     </div>
-    <div v-if="bodyText" class="p-body text-grey-darker">{{ bodyText }}</div>
+    <div v-if="body" class="p-body text-grey-darker">{{ body }}</div>
     <div class="flex items-center mt-4">
-      <CTag v-if="comments.totalCount > 0" class="mr-1">
+      <CTag v-if="comments > 0" class="mr-1">
         <CIcon name="comment-discussion" />
-        {{ comments.totalCount }}
+        {{ comments }}
       </CTag>
-      <CTag v-for="label of labels.nodes" :key="label.id" :color="`#${label.color}`" class="mr-1">
-        {{ label.name }}
-      </CTag>
+      <CTag v-for="label of labels" :key="label.id" :color="`#${label.color}`" class="mr-1">{{ label.name }}</CTag>
     </div>
   </div>
 </template>
@@ -19,17 +17,17 @@
 <script>
 export default {
   props: {
-    bodyText: {
+    body: {
       type: String,
       required: true
     },
     comments: {
-      type: Object,
+      type: Number,
       required: true
     },
     labels: {
-      type: Object,
-      default: () => ({})
+      type: Array,
+      default: () => []
     },
     title: {
       type: String,

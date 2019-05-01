@@ -5,13 +5,6 @@
         <div class="p-title">
           <h1>GitHub<span class="p-title__label font-normal ml-2 px-2 py-1 rounded-sm">good first issue</span></h1>
         </div>
-        <button
-          v-if="loggedIn"
-          class="p-logout flex hover:bg-grey-darkest ml-auto items-center px-2 self-stretch text-white"
-          @click="logout"
-        >
-          <CIcon name="sign-out" />Sign out
-        </button>
       </div>
     </header>
     <nuxt class="flex-grow" />
@@ -27,21 +20,6 @@
     </footer>
   </div>
 </template>
-
-<script>
-export default {
-  computed: {
-    loggedIn() {
-      return this.$auth.loggedIn
-    }
-  },
-  methods: {
-    logout() {
-      this.$auth.logout()
-    }
-  }
-}
-</script>
 
 <style scoped>
 .l-root {

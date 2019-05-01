@@ -1,39 +1,42 @@
 <template>
   <div class="border-b flex items-center p-2">
     <CIcon name="repo" class="text-grey-dark" />
-    <a :href="owner.url" target="_blank">{{ owner.login }}</a>
+    <a :href="ownerUrl" target="_blank">{{ owner }}</a>
     <span class="mx-1">/</span>
     <a :href="url" target="_blank" class="mr-auto">{{ name }}</a>
-    <CTag v-if="primaryLanguage" :color="primaryLanguage.color" class="mr-2">{{ primaryLanguage.name }}</CTag>
+    <!-- <CTag v-if="primaryLanguage" :color="primaryLanguage.color" class="mr-2">{{ primaryLanguage.name }}</CTag>
     <CTag>
       <CIcon name="star" />
       {{ stargazers.totalCount }}
-    </CTag>
+    </CTag>-->
   </div>
 </template>
 
 <script>
+const ORIGIN = 'https://github.com'
+
 export default {
   props: {
-    name: {
+    apiUrl: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    fragments() {
+      return this.apiUrl.split('/')
     },
-    owner: {
-      type: Object,
-      required: true
+    name() {
+      return this.fragments[this.fragments.length - 1]
     },
-    primaryLanguage: {
-      type: Object,
-      default: () => ({})
+    owner() {
+      return this.fragments[this.fragments.length - 2]
     },
-    stargazers: {
-      type: Object,
-      required: true
+    ownerUrl() {
+      return `${ORIGIN}/${this.owner}`
     },
-    url: {
-      type: String,
-      required: true
+    url() {
+      return `${ORIGIN}/${this.owner}/${this.name}`
     }
   }
 }

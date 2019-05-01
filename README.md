@@ -1,10 +1,10 @@
 # good-first-issue
 
-> Yet another good first issue finder
+> Yet another "good first issue" finder on GitHub
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 $ npm install
 

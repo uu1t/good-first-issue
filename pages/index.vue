@@ -1,5 +1,6 @@
 <template>
   <main class="container mx-auto">
+    <QueryFilter :language="language" @update:language="onUpdateLanguage" />
     <div v-if="isLoading" class="p-loading flex flex-col items-center my-16">
       <CIcon name="sync" spin />
     </div>
@@ -16,22 +17,30 @@ import { mapActions, mapState } from 'vuex'
 import { DEFAULT_PAGE } from '~/utils/constants'
 import IssueResult from '~/components/IssueResult.vue'
 import Pagination from '~/components/Pagination.vue'
+import QueryFilter from '~/components/QueryFilter.vue'
 
 export default {
   components: {
     IssueResult,
-    Pagination
+    Pagination,
+    QueryFilter
   },
   data: () => ({
     isLoading: true
   }),
   computed: {
     ...mapState(['issueResults', 'totalCount']),
+    language() {
+      return this.$route.query.language
+    },
     page() {
       return Number.parseInt(this.$route.query.page) || DEFAULT_PAGE
     },
     searchParams() {
-      return this.page
+      return {
+        language: this.language,
+        page: this.page
+      }
     }
   },
   watch: {
@@ -45,13 +54,29 @@ export default {
   methods: {
     ...mapActions(['searchIssues']),
     async doSearchIssues() {
+      this.isLoading = true
       try {
-        await this.searchIssues({ page: this.page })
+        await this.searchIssues(this.searchParams)
         this.isLoading = false
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
       }
+    },
+    onUpdateLanguage(language) {
+      this.$router.push({
+        query: this.queryParams({ language })
+      })
+    },
+    queryParams(nextParams) {
+      const params = { ...this.searchParams, ...nextParams }
+      if (params.page === 1) {
+        delete params.page
+      }
+      if (!params.language) {
+        delete params.language
+      }
+      return params
     }
   }
 }

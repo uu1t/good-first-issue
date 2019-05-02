@@ -1,5 +1,5 @@
 <template>
-  <div class="l-root flex flex-col">
+  <div class="flex flex-col min-h-screen">
     <header class="l-header flex h-16">
       <div class="container flex items-center mx-auto">
         <div class="p-title">
@@ -22,10 +22,6 @@
 </template>
 
 <style scoped>
-.l-root {
-  min-height: 100vh;
-}
-
 .l-header {
   background: #24292e;
 }

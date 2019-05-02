@@ -4,6 +4,7 @@
 
 <script>
 import Octicon from 'vue-octicon/components/Octicon.vue'
+import 'vue-octicon/icons/chevron-down'
 import 'vue-octicon/icons/chevron-left'
 import 'vue-octicon/icons/chevron-right'
 import 'vue-octicon/icons/comment-discussion'

@@ -40,11 +40,16 @@ export const actions = {
     const json = await response.json()
     commit('receiveRepository', { key: url, repository: json })
   },
-  async searchIssues({ commit }, { page }) {
+  async searchIssues({ commit }, { page, language }) {
+    let q = 'is:open is:issue'
+    q += ' label:"good first issue"'
+    if (language) {
+      q += ` language:${language}`
+    }
     const params = new URLSearchParams({
       page,
       per_page: PER_PAGE,
-      q: 'is:open is:issue label:"good first issue"'
+      q
     })
     const response = await fetch(`${API_ORIGIN}/search/issues?${params.toString()}`)
     const json = await response.json()

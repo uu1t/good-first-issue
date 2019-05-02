@@ -1,0 +1,49 @@
+<template>
+  <div class="flex flex-wrap mt-2 mb-10">
+    <div class="mt-4 w-full md:pr-2 md:w-1/2">
+      <label class="block text-grey-darker text-sm font-bold mb-2" for="label">Label</label>
+      <div class="relative">
+        <select
+          id="label"
+          class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
+        >
+          <option>good first issue</option>
+          <option>help wanted</option>
+          <option>up for grabs</option>
+        </select>
+        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+          <CIcon name="chevron-down" :margin-right="false" />
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 w-full md:pl-2 md:w-1/2">
+      <label class="block text-grey-darker text-sm font-bold mb-2" for="language">Language</label>
+      <div class="relative">
+        <select
+          id="language"
+          class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
+          :value="language"
+          @change="$emit('update:language', $event.target.value)"
+        >
+          <option></option>
+          <option value="javascript">JavaScript</option>
+          <option value="html">HTML</option>
+        </select>
+        <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
+          <CIcon name="chevron-down" :margin-right="false" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    language: {
+      type: String,
+      default: ''
+    }
+  }
+}
+</script>

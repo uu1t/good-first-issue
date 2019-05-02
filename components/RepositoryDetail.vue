@@ -18,7 +18,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-const ORIGIN = 'https://github.com'
+import { ORIGIN } from '~/utils/constants'
 
 export default {
   props: {

@@ -1,8 +1,11 @@
 import Vue from 'vue'
 
+import { API_ORIGIN, PER_PAGE } from '~/utils/constants'
+
 export const state = () => ({
   issueResults: [],
-  repositories: {}
+  repositories: {},
+  totalCount: null
 })
 
 export const getters = {
@@ -10,9 +13,12 @@ export const getters = {
 }
 
 export const mutations = {
-  receiveIssues(state, items) {
+  /* eslint-disable camelcase */
+  receiveIssues(state, { items, total_count }) {
     state.issueResults = items
+    state.totalCount = total_count
   },
+  /* eslint-enable */
   receiveRepository(state, { key, repository }) {
     Vue.set(state.repositories, key, {
       isLoading: false,
@@ -34,11 +40,14 @@ export const actions = {
     const json = await response.json()
     commit('receiveRepository', { key: url, repository: json })
   },
-  async searchIssues({ commit }) {
-    const response = await fetch(
-      'https://api.github.com/search/issues?q=is:open+is:issue+label:%22good%20first%20issue%22'
-    )
+  async searchIssues({ commit }, { page }) {
+    const params = new URLSearchParams({
+      page,
+      per_page: PER_PAGE,
+      q: 'is:open is:issue label:"good first issue"'
+    })
+    const response = await fetch(`${API_ORIGIN}/search/issues?${params.toString()}`)
     const json = await response.json()
-    commit('receiveIssues', json.items)
+    commit('receiveIssues', json)
   }
 }

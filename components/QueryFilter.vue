@@ -28,8 +28,7 @@
           @change="$emit('update:language', $event.target.value)"
         >
           <option></option>
-          <option>JavaScript</option>
-          <option>HTML</option>
+          <option v-for="l in languages" :key="l">{{ l }}</option>
         </select>
         <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
           <CIcon name="chevron-down" :margin-right="false" />
@@ -40,6 +39,8 @@
 </template>
 
 <script>
+import { LANGUAGES } from '~/utils/constants'
+
 export default {
   props: {
     label: {
@@ -49,6 +50,11 @@ export default {
     language: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    languages() {
+      return Object.keys(LANGUAGES)
     }
   }
 }

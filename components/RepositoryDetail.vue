@@ -6,7 +6,7 @@
     <a :href="url" target="_blank" class="mr-auto">{{ name }}</a>
     <CIcon v-if="!repository || repository.isLoading" name="sync" :margin-right="false" spin />
     <template v-else>
-      <CTag v-if="repository.language" class="mr-2">{{ repository.language }}</CTag>
+      <CTag v-if="repository.language" :color="color" class="mr-2">{{ repository.language }}</CTag>
       <CTag>
         <CIcon name="star" />
         {{ repository.stargazers_count }}
@@ -18,7 +18,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import { ORIGIN } from '~/utils/constants'
+import { ORIGIN, LANGUAGES } from '~/utils/constants'
 
 export default {
   props: {
@@ -34,6 +34,9 @@ export default {
     ...mapGetters(['getRepository']),
     repository() {
       return this.getRepository(this.apiUrl)
+    },
+    color() {
+      return LANGUAGES[this.repository.language]
     },
     urlFragments() {
       return this.apiUrl.split('/')

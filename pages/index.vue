@@ -89,11 +89,14 @@ export default {
     },
     queryParams(nextParams) {
       const params = { ...this.searchParams, ...nextParams }
-      if (params.page === 1) {
-        delete params.page
+      if (params.label === DEFAULT_LABEL) {
+        delete params.label
       }
       if (!params.language) {
         delete params.language
+      }
+      if (params.page === 1) {
+        delete params.page
       }
       return params
     }

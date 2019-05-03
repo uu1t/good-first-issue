@@ -6,7 +6,7 @@
     </div>
     <transition-group>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
-      <Pagination key="p-pagination" :page="page" :total-count="totalCount" />
+      <Pagination key="p-pagination" :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" />
     </transition-group>
   </main>
 </template>
@@ -62,6 +62,11 @@ export default {
         // eslint-disable-next-line no-console
         console.error(error)
       }
+    },
+    onClickNavigate(page) {
+      this.$router.push({
+        query: this.queryParams({ page })
+      })
     },
     onUpdateLanguage(language) {
       this.$router.push({

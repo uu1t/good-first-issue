@@ -1,30 +1,27 @@
 <template>
   <div class="flex justify-center mb-4">
-    <nuxt-link
+    <button
       :disabled="page == 1"
-      :event="page == 1 ? '' : 'click'"
-      :to="{ query: { page: undefined } }"
-      class="p-pagination__link border hover:bg-grey-light inline-flex items-center p-2 rounded-l"
+      class="p-pagination__link border hover:bg-grey-light hover:text-blue-darker inline-flex items-center p-2 rounded-l text-blue-dark"
+      @click="$emit('click:navigate', 1)"
     >
       <CIcon name="chevron-doulbe-left" :margin-right="false" />
-    </nuxt-link>
-    <nuxt-link
+    </button>
+    <button
       :disabled="page == 1"
-      :event="page == 1 ? '' : 'click'"
-      :to="{ query: { page: page > 2 ? page - 1 : undefined } }"
-      class="p-pagination__link border-t border-r border-b hover:bg-grey-light inline-flex items-center p-2 rounded-r"
+      class="p-pagination__link border-t border-r border-b hover:bg-grey-light hover:text-blue-darker inline-flex items-center p-2 rounded-r text-blue-dark"
+      @click="$emit('click:navigate', page - 1)"
     >
       <CIcon name="chevron-left" :margin-right="false" />
-    </nuxt-link>
+    </button>
     <span class="mx-2 p-2">{{ page }}</span>
-    <nuxt-link
+    <button
       :disabled="page >= totalPage"
-      :event="page >= totalPage ? '' : 'click'"
-      :to="{ query: { page: page + 1 } }"
-      class="p-pagination__link border hover:bg-grey-light inline-flex items-center p-2 rounded"
+      class="p-pagination__link border hover:bg-grey-light hover:text-blue-darker inline-flex items-center p-2 rounded text-blue-dark"
+      @click="$emit('click:navigate', page + 1)"
     >
       <CIcon name="chevron-right" :margin-right="false" />
-    </nuxt-link>
+    </button>
   </div>
 </template>
 

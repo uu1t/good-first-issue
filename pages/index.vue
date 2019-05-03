@@ -1,6 +1,11 @@
 <template>
   <main class="container mx-auto">
-    <QueryFilter :language="language" @update:language="onUpdateLanguage" />
+    <QueryFilter
+      :label="label"
+      :language="language"
+      @update:label="onUpdateLabel"
+      @update:language="onUpdateLanguage"
+    />
     <div v-if="isLoading" class="p-loading flex flex-col items-center my-16">
       <CIcon name="sync" spin />
     </div>
@@ -14,7 +19,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 
-import { DEFAULT_PAGE } from '~/utils/constants'
+import { DEFAULT_LABEL, DEFAULT_PAGE } from '~/utils/constants'
 import IssueResult from '~/components/IssueResult.vue'
 import Pagination from '~/components/Pagination.vue'
 import QueryFilter from '~/components/QueryFilter.vue'
@@ -30,6 +35,9 @@ export default {
   }),
   computed: {
     ...mapState(['issueResults', 'totalCount']),
+    label() {
+      return this.$route.query.label || DEFAULT_LABEL
+    },
     language() {
       return this.$route.query.language
     },
@@ -38,6 +46,7 @@ export default {
     },
     searchParams() {
       return {
+        label: this.label,
         language: this.language,
         page: this.page
       }
@@ -68,9 +77,14 @@ export default {
         query: this.queryParams({ page })
       })
     },
+    onUpdateLabel(label) {
+      this.$router.push({
+        query: this.queryParams({ label, page: 1 })
+      })
+    },
     onUpdateLanguage(language) {
       this.$router.push({
-        query: this.queryParams({ language })
+        query: this.queryParams({ language, page: 1 })
       })
     },
     queryParams(nextParams) {

@@ -40,9 +40,9 @@ export const actions = {
     const json = await response.json()
     commit('receiveRepository', { key: url, repository: json })
   },
-  async searchIssues({ commit }, { page, language }) {
+  async searchIssues({ commit }, { label, language, page }) {
     let q = 'is:open is:issue'
-    q += ' label:"good first issue"'
+    q += ` label:"${label}"`
     if (language) {
       q += ` language:${language}`
     }

@@ -6,6 +6,8 @@
         <select
           id="label"
           class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
+          :value="label"
+          @change="$emit('update:label', $event.target.value)"
         >
           <option>good first issue</option>
           <option>help wanted</option>
@@ -26,8 +28,8 @@
           @change="$emit('update:language', $event.target.value)"
         >
           <option></option>
-          <option value="javascript">JavaScript</option>
-          <option value="html">HTML</option>
+          <option>JavaScript</option>
+          <option>HTML</option>
         </select>
         <div class="pointer-events-none absolute pin-y pin-r flex items-center px-2 text-grey-darker">
           <CIcon name="chevron-down" :margin-right="false" />
@@ -40,6 +42,10 @@
 <script>
 export default {
   props: {
+    label: {
+      type: String,
+      required: true
+    },
     language: {
       type: String,
       default: ''

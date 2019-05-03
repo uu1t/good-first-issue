@@ -9,10 +9,10 @@
     <div v-if="isLoading" class="p-loading flex flex-col items-center my-16">
       <CIcon name="sync" spin />
     </div>
-    <transition-group>
+    <template v-else>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
-      <Pagination key="p-pagination" :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" />
-    </transition-group>
+      <Pagination :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" />
+    </template>
   </main>
 </template>
 

@@ -1,81 +1,39 @@
 <template>
   <div class="border-b flex items-center p-2">
     <CIcon name="repo" class="text-grey-dark" />
-    <a :href="ownerUrl" target="_blank">{{ owner }}</a>
+    <a :href="owner.url" target="_blank">{{ owner.login }}</a>
     <span class="mx-1">/</span>
     <a :href="url" target="_blank" class="mr-auto">{{ name }}</a>
-    <CIcon v-if="!repository || repository.isLoading" name="sync" :margin-right="false" spin />
-    <template v-else>
-      <CTag v-if="repository.language" :color="color" class="mr-2">{{ repository.language }}</CTag>
-      <CTag>
-        <CIcon name="star" />
-        {{ repository.stargazers_count }}
-      </CTag>
-    </template>
+    <CTag v-if="language" :color="language.color" class="mr-2">{{ language.name }}</CTag>
+    <CTag>
+      <CIcon name="star" />
+      {{ stargazersCount }}
+    </CTag>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-
-import { ORIGIN, LANGUAGES } from '~/utils/constants'
-
 export default {
   props: {
-    apiUrl: {
+    language: {
+      type: Object,
+      default: () => ({})
+    },
+    name: {
       type: String,
       required: true
-    }
-  },
-  data: () => ({
-    observer: null
-  }),
-  computed: {
-    ...mapGetters(['getRepository']),
-    repository() {
-      return this.getRepository(this.apiUrl)
     },
-    color() {
-      return LANGUAGES[this.repository.language]
+    owner: {
+      type: Object,
+      required: true
     },
-    urlFragments() {
-      return this.apiUrl.split('/')
+    stargazersCount: {
+      type: Number,
+      required: true
     },
-    name() {
-      return this.urlFragments[this.urlFragments.length - 1]
-    },
-    owner() {
-      return this.urlFragments[this.urlFragments.length - 2]
-    },
-    ownerUrl() {
-      return `${ORIGIN}/${this.owner}`
-    },
-    url() {
-      return `${ORIGIN}/${this.owner}/${this.name}`
-    }
-  },
-  mounted() {
-    this.observer = new IntersectionObserver(entries => {
-      const entry = entries[0]
-      if (entry.isIntersecting) {
-        this.observer.disconnect()
-        this.doFetchRepository()
-      }
-    })
-    this.observer.observe(this.$el)
-  },
-  destroyed() {
-    this.observer.disconnect()
-  },
-  methods: {
-    ...mapActions(['fetchRepository']),
-    async doFetchRepository() {
-      try {
-        await this.fetchRepository(this.apiUrl)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
+    url: {
+      type: String,
+      required: true
     }
   }
 }

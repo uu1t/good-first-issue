@@ -38,7 +38,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ['@nuxtjs/apollo'],
 
   /*
    ** Build configuration
@@ -57,6 +57,12 @@ export default {
           exclude: /(node_modules)/
         })
       }
+    }
+  },
+
+  apollo: {
+    clientConfigs: {
+      default: '~/plugins/apollo.js'
     }
   },
 

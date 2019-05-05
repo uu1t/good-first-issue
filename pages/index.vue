@@ -6,35 +6,44 @@
       @update:label="onUpdateLabel"
       @update:language="onUpdateLanguage"
     />
-    <div v-if="isLoading" class="p-loading flex flex-col items-center my-16">
+    <div v-if="$apollo.loading" class="p-loading flex flex-col items-center my-16">
       <CIcon name="sync" spin />
     </div>
     <template v-else>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
-      <Pagination :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" />
+      <!-- <Pagination :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" /> -->
     </template>
   </main>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
+import gql from 'graphql-tag'
 
+import firebase from '~/plugins/firebase'
 import { DEFAULT_LABEL, DEFAULT_PAGE } from '~/utils/constants'
 import IssueResult from '~/components/IssueResult.vue'
-import Pagination from '~/components/Pagination.vue'
+// import Pagination from '~/components/Pagination.vue'
 import QueryFilter from '~/components/QueryFilter.vue'
 
 export default {
   components: {
     IssueResult,
-    Pagination,
+    // Pagination,
     QueryFilter
   },
   data: () => ({
-    isLoading: true
+    isLoading: true,
+    search: {
+      pageInfo: {}
+    },
+    query: 'is:issue label:"good first issue"'
   }),
   computed: {
-    ...mapState(['issueResults', 'totalCount']),
+    issueResults() {
+      const { nodes = [] } = this.search
+      return nodes
+    },
     label() {
       return this.$route.query.label || DEFAULT_LABEL
     },
@@ -57,11 +66,21 @@ export default {
       this.doSearchIssues()
     }
   },
-  created() {
-    this.doSearchIssues()
+  async created() {
+    const result = await new Promise(resolve => {
+      firebase
+        .auth()
+        .getRedirectResult()
+        .then(resolve)
+    })
+    if (result.credential) {
+      this.setToken(result.credential.accessToken)
+    }
+    // this.doSearchIssues()
   },
   methods: {
     ...mapActions(['searchIssues']),
+    ...mapMutations(['setToken']),
     async doSearchIssues() {
       this.isLoading = true
       try {
@@ -99,6 +118,77 @@ export default {
         delete params.page
       }
       return params
+    }
+  },
+  apollo: {
+    search: {
+      query: gql`
+        query SearchIssues($query: String!, $after: String, $before: String, $first: Int, $last: Int) {
+          search(type: ISSUE, query: $query, after: $after, before: $before, first: $first, last: $last) {
+            issueCount
+            pageInfo {
+              endCursor
+              hasNextPage
+              hasPreviousPage
+              startCursor
+            }
+            nodes {
+              ... on Issue {
+                bodyText
+                id
+                title
+                url
+                author {
+                  avatarUrl
+                  login
+                  url
+                }
+                comments {
+                  totalCount
+                }
+                labels(first: 10) {
+                  nodes {
+                    ... on Label {
+                      color
+                      id
+                      name
+                    }
+                  }
+                }
+                repository {
+                  name
+                  url
+                  owner {
+                    login
+                    url
+                  }
+                  primaryLanguage {
+                    color
+                    name
+                  }
+                  stargazers {
+                    totalCount
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables() {
+        const { after, before } = this.$route.query
+        const vars = {
+          after,
+          before,
+          query: this.query
+        }
+        if (before) {
+          vars.last = 20
+        } else {
+          vars.first = 20
+        }
+        return vars
+      }
     }
   }
 }

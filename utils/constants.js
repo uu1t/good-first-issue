@@ -1,3 +1,5 @@
+export const GITHUB_ACCESS_TOKEN = 'GITHUB_ACCESS_TOKEN'
+
 export const API_ORIGIN = 'https://api.github.com'
 export const ORIGIN = 'https://github.com'
 

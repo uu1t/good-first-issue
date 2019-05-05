@@ -1,19 +1,25 @@
 <template>
   <div class="p-issue-result border my-4 rounded">
-    <RepositoryDetail :api-url="issue.repository_url" />
+    <RepositoryDetail
+      :language="issue.repository.primaryLanguage"
+      :name="issue.repository.name"
+      :owner="issue.repository.owner"
+      :stargazers-count="issue.repository.stargazers.totalCount"
+      :url="issue.repository.url"
+    />
     <div class="flex">
       <UserDetail
-        :avatar-url="issue.user.avatar_url"
-        :login="issue.user.login"
-        :url="issue.user.html_url"
+        :avatar-url="issue.author.avatarUrl"
+        :login="issue.author.login"
+        :url="issue.author.url"
         class="p-user flex-no-shrink overflow-hidden"
       />
       <IssueDetail
-        :body="issue.body"
-        :comments="issue.comments"
-        :labels="issue.labels"
+        :body-text="issue.bodyText"
+        :comments-count="issue.comments.totalCount"
+        :labels="issue.labels.nodes"
         :title="issue.title"
-        :url="issue.html_url"
+        :url="issue.url"
         class="overflow-hidden"
       />
     </div>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import firebase, { githubProvider } from '@/plugins/firebase'
 
-import { API_ORIGIN, PER_PAGE } from '~/utils/constants'
+import { GITHUB_ACCESS_TOKEN, API_ORIGIN, PER_PAGE } from '~/utils/constants'
 
 export const strict = false
 
@@ -33,6 +33,13 @@ export const mutations = {
   fetchRepository(state, key) {
     Vue.set(state.repositories, key, { isLoading: true })
   },
+  setToken(_, token) {
+    if (token) {
+      localStorage.setItem(GITHUB_ACCESS_TOKEN, token)
+    } else {
+      localStorage.removeItem(GITHUB_ACCESS_TOKEN)
+    }
+  },
   setUser(state, user) {
     state.user = user
   }
@@ -55,6 +62,7 @@ export const actions = {
         .then(resolve)
     })
     commit('setUser', null)
+    commit('setToken', null)
   },
   async fetchRepository({ commit, state }, url) {
     if (state.repositories[url]) {

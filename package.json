@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "dependencies": {
     "cross-env": "^5.2.0",
+    "firebase": "^5.11.1",
     "nuxt": "^2.4.0",
     "vue-octicon": "^2.1.1"
   },

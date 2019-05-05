@@ -1,15 +1,20 @@
 import Vue from 'vue'
+import firebase, { githubProvider } from '@/plugins/firebase'
 
 import { API_ORIGIN, PER_PAGE } from '~/utils/constants'
+
+export const strict = false
 
 export const state = () => ({
   issueResults: [],
   repositories: {},
-  totalCount: null
+  totalCount: null,
+  user: null
 })
 
 export const getters = {
-  getRepository: state => key => state.repositories[key]
+  getRepository: state => key => state.repositories[key],
+  loggedIn: state => Boolean(state.user)
 }
 
 export const mutations = {
@@ -27,10 +32,30 @@ export const mutations = {
   },
   fetchRepository(state, key) {
     Vue.set(state.repositories, key, { isLoading: true })
+  },
+  setUser(state, user) {
+    state.user = user
   }
 }
 
 export const actions = {
+  login() {
+    return new Promise(resolve => {
+      firebase
+        .auth()
+        .signInWithRedirect(githubProvider)
+        .then(resolve)
+    })
+  },
+  async logout({ commit }) {
+    await new Promise(resolve => {
+      firebase
+        .auth()
+        .signOut()
+        .then(resolve)
+    })
+    commit('setUser', null)
+  },
   async fetchRepository({ commit, state }, url) {
     if (state.repositories[url]) {
       return

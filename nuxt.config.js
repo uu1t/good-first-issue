@@ -33,7 +33,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/components.js'],
+  plugins: ['~/plugins/auth.js', '~/plugins/components.js'],
 
   /*
    ** Nuxt.js modules
@@ -58,5 +58,9 @@ export default {
         })
       }
     }
+  },
+
+  router: {
+    middleware: ['auth']
   }
 }

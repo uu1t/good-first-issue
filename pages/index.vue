@@ -11,7 +11,15 @@
     </div>
     <template v-else>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
-      <!-- <Pagination :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" /> -->
+      <Pagination
+        :end-cursor="search.pageInfo.endCursor"
+        :has-next-page="search.pageInfo.hasNextPage"
+        :has-previous-page="search.pageInfo.hasPreviousPage"
+        :start-cursor="search.pageInfo.startCursor"
+        @click:navigate-first="onClickNavigateFirst"
+        @click:navigate-next="onClickNavigateNext"
+        @click:navigate-previous="onClickNavigatePrevious"
+      />
     </template>
   </main>
 </template>
@@ -21,15 +29,15 @@ import { mapMutations } from 'vuex'
 import gql from 'graphql-tag'
 
 import firebase from '~/plugins/firebase'
-import { DEFAULT_LABEL, DEFAULT_PAGE, PER_PAGE } from '~/utils/constants'
+import { DEFAULT_LABEL, PER_PAGE } from '~/utils/constants'
 import IssueResult from '~/components/IssueResult.vue'
-// import Pagination from '~/components/Pagination.vue'
+import Pagination from '~/components/Pagination.vue'
 import QueryFilter from '~/components/QueryFilter.vue'
 
 export default {
   components: {
     IssueResult,
-    // Pagination,
+    Pagination,
     QueryFilter
   },
   data: () => ({
@@ -38,13 +46,6 @@ export default {
     }
   }),
   computed: {
-    query() {
-      let query = `is:issue is:open label:"${this.label}"`
-      if (this.language) {
-        query += ` language:"${this.language}"`
-      }
-      return query
-    },
     issueResults() {
       const { nodes = [] } = this.search
       return nodes
@@ -55,14 +56,17 @@ export default {
     language() {
       return this.$route.query.language
     },
-    page() {
-      return Number.parseInt(this.$route.query.page) || DEFAULT_PAGE
+    query() {
+      let query = `is:issue is:open label:"${this.label}"`
+      if (this.language) {
+        query += ` language:"${this.language}"`
+      }
+      return query
     },
     searchParams() {
       return {
         label: this.label,
-        language: this.language,
-        page: this.page
+        language: this.language
       }
     }
   },
@@ -79,19 +83,33 @@ export default {
   },
   methods: {
     ...mapMutations(['setToken']),
-    onClickNavigate(page) {
+    onClickNavigateFirst() {
       this.$router.push({
-        query: this.queryParams({ page })
+        query: this.queryParams({})
+      })
+    },
+    onClickNavigateNext() {
+      this.$router.push({
+        query: this.queryParams({
+          after: this.search.pageInfo.endCursor
+        })
+      })
+    },
+    onClickNavigatePrevious() {
+      this.$router.push({
+        query: this.queryParams({
+          before: this.search.pageInfo.startCursor
+        })
       })
     },
     onUpdateLabel(label) {
       this.$router.push({
-        query: this.queryParams({ label, page: 1 })
+        query: this.queryParams({ label })
       })
     },
     onUpdateLanguage(language) {
       this.$router.push({
-        query: this.queryParams({ language, page: 1 })
+        query: this.queryParams({ language })
       })
     },
     queryParams(nextParams) {
@@ -101,9 +119,6 @@ export default {
       }
       if (!params.language) {
         delete params.language
-      }
-      if (params.page === 1) {
-        delete params.page
       }
       return params
     }

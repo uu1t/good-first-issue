@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
 import gql from 'graphql-tag'
 
 import firebase from '~/plugins/firebase'
-import { DEFAULT_LABEL, DEFAULT_PAGE } from '~/utils/constants'
+import { DEFAULT_LABEL, DEFAULT_PAGE, PER_PAGE } from '~/utils/constants'
 import IssueResult from '~/components/IssueResult.vue'
 // import Pagination from '~/components/Pagination.vue'
 import QueryFilter from '~/components/QueryFilter.vue'
@@ -33,13 +33,18 @@ export default {
     QueryFilter
   },
   data: () => ({
-    isLoading: true,
     search: {
       pageInfo: {}
-    },
-    query: 'is:issue label:"good first issue"'
+    }
   }),
   computed: {
+    query() {
+      let query = `is:issue is:open label:"${this.label}"`
+      if (this.language) {
+        query += ` language:"${this.language}"`
+      }
+      return query
+    },
     issueResults() {
       const { nodes = [] } = this.search
       return nodes
@@ -61,11 +66,6 @@ export default {
       }
     }
   },
-  watch: {
-    searchParams() {
-      this.doSearchIssues()
-    }
-  },
   async created() {
     const result = await new Promise(resolve => {
       firebase
@@ -76,21 +76,9 @@ export default {
     if (result.credential) {
       this.setToken(result.credential.accessToken)
     }
-    // this.doSearchIssues()
   },
   methods: {
-    ...mapActions(['searchIssues']),
     ...mapMutations(['setToken']),
-    async doSearchIssues() {
-      this.isLoading = true
-      try {
-        await this.searchIssues(this.searchParams)
-        this.isLoading = false
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    },
     onClickNavigate(page) {
       this.$router.push({
         query: this.queryParams({ page })
@@ -183,9 +171,9 @@ export default {
           query: this.query
         }
         if (before) {
-          vars.last = 20
+          vars.last = PER_PAGE
         } else {
-          vars.first = 20
+          vars.first = PER_PAGE
         }
         return vars
       }

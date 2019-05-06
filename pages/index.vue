@@ -6,20 +6,30 @@
       @update:label="onUpdateLabel"
       @update:language="onUpdateLanguage"
     />
-    <div v-if="isLoading" class="p-loading flex flex-col items-center my-16">
+    <div v-if="$apollo.loading" class="p-loading flex flex-col items-center my-16">
       <CIcon name="sync" spin />
     </div>
     <template v-else>
       <IssueResult v-for="issue in issueResults" :key="issue.id" :issue="issue" />
-      <Pagination :page="page" :total-count="totalCount" @click:navigate="onClickNavigate" />
+      <Pagination
+        :end-cursor="search.pageInfo.endCursor"
+        :has-next-page="search.pageInfo.hasNextPage"
+        :has-previous-page="search.pageInfo.hasPreviousPage"
+        :start-cursor="search.pageInfo.startCursor"
+        @click:navigate-first="onClickNavigateFirst"
+        @click:navigate-next="onClickNavigateNext"
+        @click:navigate-previous="onClickNavigatePrevious"
+      />
     </template>
   </main>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapMutations } from 'vuex'
+import gql from 'graphql-tag'
 
-import { DEFAULT_LABEL, DEFAULT_PAGE } from '~/utils/constants'
+import firebase from '~/plugins/firebase'
+import { DEFAULT_LABEL, PER_PAGE } from '~/utils/constants'
 import IssueResult from '~/components/IssueResult.vue'
 import Pagination from '~/components/Pagination.vue'
 import QueryFilter from '~/components/QueryFilter.vue'
@@ -31,60 +41,75 @@ export default {
     QueryFilter
   },
   data: () => ({
-    isLoading: true
+    search: {
+      pageInfo: {}
+    }
   }),
   computed: {
-    ...mapState(['issueResults', 'totalCount']),
+    issueResults() {
+      const { nodes = [] } = this.search
+      return nodes
+    },
     label() {
       return this.$route.query.label || DEFAULT_LABEL
     },
     language() {
       return this.$route.query.language
     },
-    page() {
-      return Number.parseInt(this.$route.query.page) || DEFAULT_PAGE
+    query() {
+      let query = `is:issue is:open label:"${this.label}"`
+      if (this.language) {
+        query += ` language:"${this.language}"`
+      }
+      return query
     },
     searchParams() {
       return {
         label: this.label,
-        language: this.language,
-        page: this.page
+        language: this.language
       }
     }
   },
-  watch: {
-    searchParams() {
-      this.doSearchIssues()
+  async created() {
+    const result = await new Promise(resolve => {
+      firebase
+        .auth()
+        .getRedirectResult()
+        .then(resolve)
+    })
+    if (result.credential) {
+      this.setToken(result.credential.accessToken)
     }
-  },
-  created() {
-    this.doSearchIssues()
   },
   methods: {
-    ...mapActions(['searchIssues']),
-    async doSearchIssues() {
-      this.isLoading = true
-      try {
-        await this.searchIssues(this.searchParams)
-        this.isLoading = false
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    },
-    onClickNavigate(page) {
+    ...mapMutations(['setToken']),
+    onClickNavigateFirst() {
       this.$router.push({
-        query: this.queryParams({ page })
+        query: this.queryParams({})
+      })
+    },
+    onClickNavigateNext() {
+      this.$router.push({
+        query: this.queryParams({
+          after: this.search.pageInfo.endCursor
+        })
+      })
+    },
+    onClickNavigatePrevious() {
+      this.$router.push({
+        query: this.queryParams({
+          before: this.search.pageInfo.startCursor
+        })
       })
     },
     onUpdateLabel(label) {
       this.$router.push({
-        query: this.queryParams({ label, page: 1 })
+        query: this.queryParams({ label })
       })
     },
     onUpdateLanguage(language) {
       this.$router.push({
-        query: this.queryParams({ language, page: 1 })
+        query: this.queryParams({ language })
       })
     },
     queryParams(nextParams) {
@@ -95,10 +120,78 @@ export default {
       if (!params.language) {
         delete params.language
       }
-      if (params.page === 1) {
-        delete params.page
-      }
       return params
+    }
+  },
+  apollo: {
+    search: {
+      query: gql`
+        query SearchIssues($query: String!, $after: String, $before: String, $first: Int, $last: Int) {
+          search(type: ISSUE, query: $query, after: $after, before: $before, first: $first, last: $last) {
+            issueCount
+            pageInfo {
+              endCursor
+              hasNextPage
+              hasPreviousPage
+              startCursor
+            }
+            nodes {
+              ... on Issue {
+                bodyText
+                id
+                title
+                url
+                author {
+                  avatarUrl
+                  login
+                  url
+                }
+                comments {
+                  totalCount
+                }
+                labels(first: 10) {
+                  nodes {
+                    ... on Label {
+                      color
+                      id
+                      name
+                    }
+                  }
+                }
+                repository {
+                  name
+                  url
+                  owner {
+                    login
+                    url
+                  }
+                  primaryLanguage {
+                    color
+                    name
+                  }
+                  stargazers {
+                    totalCount
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables() {
+        const { after, before } = this.$route.query
+        const vars = {
+          after,
+          before,
+          query: this.query
+        }
+        if (before) {
+          vars.last = PER_PAGE
+        } else {
+          vars.first = PER_PAGE
+        }
+        return vars
+      }
     }
   }
 }

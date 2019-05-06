@@ -3,11 +3,11 @@
     <div class="p-title text-lg mb-3">
       <a :href="url" target="_blank">{{ title }}</a>
     </div>
-    <div v-if="body" class="p-body text-grey-darker">{{ body }}</div>
+    <div v-if="bodyText" class="p-body text-grey-darker">{{ bodyText }}</div>
     <div class="flex flex-wrap items-center mt-3">
-      <CTag v-if="comments > 0" class="mr-1 mt-1">
+      <CTag v-if="commentsCount > 0" class="mr-1 mt-1">
         <CIcon name="comment-discussion" />
-        {{ comments }}
+        {{ commentsCount }}
       </CTag>
       <CTag v-for="label of labels" :key="label.id" :color="`#${label.color}`" class="mr-1 mt-1">{{ label.name }}</CTag>
     </div>
@@ -17,11 +17,11 @@
 <script>
 export default {
   props: {
-    body: {
+    bodyText: {
       type: String,
       required: true
     },
-    comments: {
+    commentsCount: {
       type: Number,
       required: true
     },

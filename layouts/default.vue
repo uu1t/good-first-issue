@@ -5,6 +5,13 @@
         <div class="p-title">
           <h1>GitHub<span class="p-title__label font-normal ml-2 px-2 py-1 rounded-sm">good first issue</span></h1>
         </div>
+        <button
+          v-if="loggedIn"
+          class="p-logout flex hover:bg-grey-darkest ml-auto items-center px-2 self-stretch text-white"
+          @click="doLogout"
+        >
+          <CIcon name="sign-out" />Sign out
+        </button>
       </div>
     </header>
     <nuxt class="flex-grow" />
@@ -20,6 +27,23 @@
     </footer>
   </div>
 </template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex'
+
+export default {
+  computed: {
+    ...mapGetters(['loggedIn'])
+  },
+  methods: {
+    ...mapActions(['logout']),
+    async doLogout() {
+      await this.logout()
+      this.$router.replace('/login')
+    }
+  }
+}
+</script>
 
 <style scoped>
 .l-header {

@@ -3,7 +3,11 @@
   "description": "Yet another \"good first issue\" finder on GitHub",
   "version": "1.0.0",
   "dependencies": {
+    "@nuxtjs/apollo": "^4.0.0-rc4",
+    "apollo-boost": "^0.3.1",
     "cross-env": "^5.2.0",
+    "firebase": "^5.11.1",
+    "graphql-tag": "^2.10.1",
     "nuxt": "^2.4.0",
     "vue-octicon": "^2.1.1"
   },

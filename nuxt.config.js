@@ -33,12 +33,12 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/components.js'],
+  plugins: ['~/plugins/auth.js', '~/plugins/components.js'],
 
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ['@nuxtjs/apollo'],
 
   /*
    ** Build configuration
@@ -58,5 +58,15 @@ export default {
         })
       }
     }
+  },
+
+  apollo: {
+    clientConfigs: {
+      default: '~/plugins/apollo.js'
+    }
+  },
+
+  router: {
+    middleware: ['auth']
   }
 }

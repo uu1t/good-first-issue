@@ -1,8 +1,6 @@
-export const API_ORIGIN = 'https://api.github.com'
-export const ORIGIN = 'https://github.com'
+export const GITHUB_ACCESS_TOKEN = 'GITHUB_ACCESS_TOKEN'
 
 export const DEFAULT_LABEL = 'good first issue'
-export const DEFAULT_PAGE = 1
 export const PER_PAGE = 20
 
 // Top 30 languages from https://madnight.github.io/githut/#/pull_requests/2019/1

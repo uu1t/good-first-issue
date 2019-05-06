@@ -2,6 +2,8 @@
 
 > Yet another "good first issue" finder on GitHub
 
+[![screenshot](./static/screenshot.png)](https://good-first-issue.netlify.com)
+
 ## Build Setup
 
 ```bash
@@ -20,3 +22,18 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, checkout [Nuxt.js docs](https://nuxtjs.org).
+
+## Development
+
+This project is built on Netlify and Firebase Authentication using GitHub.
+
+### Environmental variables
+
+Set the following environmental variables.
+
+- `NUXT_ENV_FIREBASE_API_KEY`
+- `NUXT_ENV_FIREBASE_PROJECT_ID`
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

@@ -9,6 +9,7 @@
           :value="label"
           @change="$emit('update:label', $event.target.value)"
         >
+          <option></option>
           <option>good first issue</option>
           <option>help wanted</option>
           <option>up for grabs</option>

@@ -51,13 +51,16 @@ export default {
       return nodes
     },
     label() {
-      return this.$route.query.label || DEFAULT_LABEL
+      return this.$route.query.hasOwnProperty('label') ? this.$route.query.label : DEFAULT_LABEL
     },
     language() {
       return this.$route.query.language
     },
     query() {
-      let query = `is:issue is:open label:"${this.label}"`
+      let query = `is:issue is:open`
+      if (this.label) {
+        query += ` label:"${this.label}"`
+      }
       if (this.language) {
         query += ` language:"${this.language}"`
       }
